@@ -29,17 +29,20 @@ namespace MusicPlayrt_1._0
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.ReadFile = new System.Windows.Forms.Button();
             this.PausePlay = new System.Windows.Forms.Button();
             this.Stop = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            this.AlbumCover = new System.Windows.Forms.PictureBox();
+            this.MusicTimeTrackBar = new System.Windows.Forms.TrackBar();
+            this.MusicCurrentTime = new System.Windows.Forms.Label();
+            this.Title = new System.Windows.Forms.Label();
+            this.Album = new System.Windows.Forms.Label();
+            this.Artist = new System.Windows.Forms.Label();
+            this.MusicDurationTime = new System.Windows.Forms.Label();
+            this.timer = new System.Windows.Forms.Timer(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.AlbumCover)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MusicTimeTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
             // ReadFile
@@ -74,73 +77,82 @@ namespace MusicPlayrt_1._0
             this.Stop.UseVisualStyleBackColor = true;
             this.Stop.Click += new System.EventHandler(this.Stop_Click);
             // 
-            // pictureBox1
+            // AlbumCover
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(34, 7);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(294, 287);
-            this.pictureBox1.TabIndex = 3;
-            this.pictureBox1.TabStop = false;
+            this.AlbumCover.Location = new System.Drawing.Point(34, 7);
+            this.AlbumCover.Name = "AlbumCover";
+            this.AlbumCover.Size = new System.Drawing.Size(294, 287);
+            this.AlbumCover.TabIndex = 3;
+            this.AlbumCover.TabStop = false;
             // 
-            // trackBar1
+            // MusicTimeTrackBar
             // 
-            this.trackBar1.AutoSize = false;
-            this.trackBar1.Location = new System.Drawing.Point(86, 358);
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(242, 18);
-            this.trackBar1.TabIndex = 4;
-            this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.MusicTimeTrackBar.AutoSize = false;
+            this.MusicTimeTrackBar.Location = new System.Drawing.Point(86, 358);
+            this.MusicTimeTrackBar.Name = "MusicTimeTrackBar";
+            this.MusicTimeTrackBar.Size = new System.Drawing.Size(188, 18);
+            this.MusicTimeTrackBar.TabIndex = 4;
+            this.MusicTimeTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
             // 
-            // label1
+            // MusicCurrentTime
             // 
-            this.label1.Location = new System.Drawing.Point(32, 358);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(48, 18);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "00:00:00";
+            this.MusicCurrentTime.Location = new System.Drawing.Point(32, 358);
+            this.MusicCurrentTime.Name = "MusicCurrentTime";
+            this.MusicCurrentTime.Size = new System.Drawing.Size(48, 18);
+            this.MusicCurrentTime.TabIndex = 5;
+            this.MusicCurrentTime.Text = "00:00:00";
             // 
-            // label2
+            // Title
             // 
-            this.label2.Location = new System.Drawing.Point(32, 287);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(296, 22);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Title";
+            this.Title.Location = new System.Drawing.Point(32, 287);
+            this.Title.Name = "Title";
+            this.Title.Size = new System.Drawing.Size(296, 22);
+            this.Title.TabIndex = 6;
+            this.Title.Text = "Title";
             // 
-            // label3
+            // Album
             // 
-            this.label3.Location = new System.Drawing.Point(32, 309);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(296, 22);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "Album";
+            this.Album.Location = new System.Drawing.Point(32, 309);
+            this.Album.Name = "Album";
+            this.Album.Size = new System.Drawing.Size(296, 22);
+            this.Album.TabIndex = 7;
+            this.Album.Text = "Album";
             // 
-            // label4
+            // Artist
             // 
-            this.label4.Location = new System.Drawing.Point(32, 331);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(296, 22);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "Artist";
+            this.Artist.Location = new System.Drawing.Point(32, 331);
+            this.Artist.Name = "Artist";
+            this.Artist.Size = new System.Drawing.Size(296, 22);
+            this.Artist.TabIndex = 8;
+            this.Artist.Text = "Artist";
+            // 
+            // MusicDurationTime
+            // 
+            this.MusicDurationTime.Location = new System.Drawing.Point(280, 358);
+            this.MusicDurationTime.Name = "MusicDurationTime";
+            this.MusicDurationTime.Size = new System.Drawing.Size(48, 18);
+            this.MusicDurationTime.TabIndex = 9;
+            this.MusicDurationTime.Text = "00:00:00";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(358, 450);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.trackBar1);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.MusicDurationTime);
+            this.Controls.Add(this.Artist);
+            this.Controls.Add(this.Album);
+            this.Controls.Add(this.Title);
+            this.Controls.Add(this.MusicCurrentTime);
+            this.Controls.Add(this.MusicTimeTrackBar);
+            this.Controls.Add(this.AlbumCover);
             this.Controls.Add(this.Stop);
             this.Controls.Add(this.PausePlay);
             this.Controls.Add(this.ReadFile);
             this.Name = "Form1";
             this.Text = "Form1";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.AlbumCover)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MusicTimeTrackBar)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -150,12 +162,14 @@ namespace MusicPlayrt_1._0
         private System.Windows.Forms.Button ReadFile;
         private System.Windows.Forms.Button PausePlay;
         private System.Windows.Forms.Button Stop;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.TrackBar trackBar1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.PictureBox AlbumCover;
+        private System.Windows.Forms.TrackBar MusicTimeTrackBar;
+        private System.Windows.Forms.Label MusicCurrentTime;
+        private System.Windows.Forms.Label Title;
+        private System.Windows.Forms.Label Album;
+        private System.Windows.Forms.Label Artist;
+        private System.Windows.Forms.Label MusicDurationTime;
+        private System.Windows.Forms.Timer timer;
     }
 }
 

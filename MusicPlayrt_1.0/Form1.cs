@@ -18,7 +18,7 @@ namespace MusicPlayrt_1._0
         }
 
         private NAudio.Wave.BlockAlignReductionStream music = null;
-        private NAudio.Wave.DirectSoundOut output = null;
+        private NAudio.Wave.DirectSoundOut output   = null;
 
         private void ReadFile_Click(object sender, EventArgs e)
         {
@@ -43,6 +43,9 @@ namespace MusicPlayrt_1._0
 
             output = new NAudio.Wave.DirectSoundOut();
             output.Init(music);
+            var duration = music.TotalTime;
+            MusicTimeTrackBar.Maximum = (int)duration.TotalMilliseconds;
+            MusicDurationTime.Text = duration.ToString(@"hh\:mm\:ss");
             output.Play();
             PausePlay.Enabled = true;
             Stop.Enabled = true;
@@ -70,6 +73,7 @@ namespace MusicPlayrt_1._0
                 output.Stop();
                 PausePlay.Enabled = false;
                 Stop.Enabled = false;
+                MusicDurationTime.Text = "00:00:00";
             }
         }
 

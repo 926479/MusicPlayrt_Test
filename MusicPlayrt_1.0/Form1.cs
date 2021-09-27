@@ -6,23 +6,33 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Forms;
 
 namespace MusicPlayrt_1._0
 {
     public partial class Form1 : Form
     {
+        private NAudio.Wave.BlockAlignReductionStream music = null;
+        private NAudio.Wave.DirectSoundOut output = null;
+        private static System.Timers.Timer Uitimer;
+       
+
         public Form1()
         {
             InitializeComponent();
         }
-
-        private NAudio.Wave.BlockAlignReductionStream music = null;
-        private NAudio.Wave.DirectSoundOut output   = null;
-
+        private static void SetTimer()
+        {
+            Uitimer = new System.Timers.Timer(100);
+            Uitimer.AutoReset = true;
+            Uitimer.Enabled = true;
+            Uitimer.Interval = 100;
+            Uitimer.Elapsed += UpdataUI;
+        }
         private void ReadFile_Click(object sender, EventArgs e)
         {
-            OpenFileDialog open = new OpenFileDialog();
+            var open = new OpenFileDialog();
             open.Filter = "Audio file (*.mp3;*.wav)|*.mp3;*.wav";
             if (open.ShowDialog() != DialogResult.OK)
             {
@@ -47,6 +57,8 @@ namespace MusicPlayrt_1._0
             MusicTimeTrackBar.Maximum = (int)duration.TotalMilliseconds;
             MusicDurationTime.Text = duration.ToString(@"hh\:mm\:ss");
             output.Play();
+            SetTimer();
+            Uitimer.Start();
             PausePlay.Enabled = true;
             Stop.Enabled = true;
         }
@@ -57,11 +69,15 @@ namespace MusicPlayrt_1._0
             {
                 if (output.PlaybackState == NAudio.Wave.PlaybackState.Playing)
                 {
+                    PausePlay.Text = "Play";
                     output.Pause();
+                    Uitimer.Stop();
                 }
                 else if (output.PlaybackState == NAudio.Wave.PlaybackState.Paused)
                 {
+                    PausePlay.Text = "Pause";
                     output.Play();
+                    Uitimer.Start();
                 }
             }
         }
@@ -75,6 +91,10 @@ namespace MusicPlayrt_1._0
                 Stop.Enabled = false;
                 MusicDurationTime.Text = "00:00:00";
             }
+        }
+
+        private static void UpdataUI(object sender, System.Timers.ElapsedEventArgs e)
+        {
         }
 
         private void DisposeWave()

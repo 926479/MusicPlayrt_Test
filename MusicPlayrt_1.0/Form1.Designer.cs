@@ -29,7 +29,6 @@ namespace MusicPlayrt_1._0
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.ReadFile = new System.Windows.Forms.Button();
             this.PausePlay = new System.Windows.Forms.Button();
             this.Stop = new System.Windows.Forms.Button();
@@ -40,7 +39,6 @@ namespace MusicPlayrt_1._0
             this.Album = new System.Windows.Forms.Label();
             this.Artist = new System.Windows.Forms.Label();
             this.MusicDurationTime = new System.Windows.Forms.Label();
-            this.Timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.AlbumCover)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MusicTimeTrackBar)).BeginInit();
             this.SuspendLayout();
@@ -134,10 +132,6 @@ namespace MusicPlayrt_1._0
             this.MusicDurationTime.TabIndex = 9;
             this.MusicDurationTime.Text = "00:00:00";
             // 
-            // Timer1
-            // 
-            this.Timer1.Tick += new System.EventHandler(this.Timer1_Tick);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -173,7 +167,6 @@ namespace MusicPlayrt_1._0
         private System.Windows.Forms.Label Album;
         private System.Windows.Forms.Label Artist;
         private System.Windows.Forms.Label MusicDurationTime;
-        private System.Windows.Forms.Timer Timer1;
     }
 }
 

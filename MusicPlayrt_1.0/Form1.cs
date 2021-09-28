@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Forms;
 
 namespace MusicPlayrt_1._0
@@ -14,14 +15,21 @@ namespace MusicPlayrt_1._0
     {
         private NAudio.Wave.BlockAlignReductionStream music = null;
         private NAudio.Wave.DirectSoundOut output = null;
+        private static System.Timers.Timer Uitimer;
        
 
         public Form1()
         {
             InitializeComponent();
-            DisposeWave();
         }
-       
+        private static void SetTimer()
+        {
+            Uitimer = new System.Timers.Timer(100);
+            Uitimer.AutoReset = true;
+            Uitimer.Enabled = true;
+            Uitimer.Interval = 100;
+            Uitimer.Elapsed += UpdataUI;
+        }
         private void ReadFile_Click(object sender, EventArgs e)
         {
             var open = new OpenFileDialog();
@@ -49,7 +57,8 @@ namespace MusicPlayrt_1._0
             MusicTimeTrackBar.Maximum = (int)duration.TotalMilliseconds;
             MusicDurationTime.Text = duration.ToString(@"hh\:mm\:ss");
             output.Play();
-            Timer1.Enabled = true;
+            SetTimer();
+            Uitimer.Start();
             PausePlay.Enabled = true;
             Stop.Enabled = true;
         }
@@ -61,43 +70,35 @@ namespace MusicPlayrt_1._0
                 if (output.PlaybackState == NAudio.Wave.PlaybackState.Playing)
                 {
                     PausePlay.Text = "Play";
-                    Timer1.Enabled = false;
                     output.Pause();
+                    Uitimer.Stop();
                 }
                 else if (output.PlaybackState == NAudio.Wave.PlaybackState.Paused)
                 {
                     PausePlay.Text = "Pause";
-                    Timer1.Enabled = true;
                     output.Play();
+                    Uitimer.Start();
                 }
             }
         }
 
         private void Stop_Click(object sender, EventArgs e)
         {
-            DisposeWave();
+            if (output != null)
+            {
+                output.Stop();
+                PausePlay.Enabled = false;
+                Stop.Enabled = false;
+                MusicDurationTime.Text = "00:00:00";
+            }
         }
 
-        private void Timer1_Tick(object sender, EventArgs e)
+        private static void UpdataUI(object sender, System.Timers.ElapsedEventArgs e)
         {
-            Timer1.Enabled = false;
-
-            var nowTime = music.CurrentTime;
-            MusicCurrentTime.Text = nowTime.ToString(@"hh\:mm\:ss");
-            MusicTimeTrackBar.Value = (int)nowTime.TotalMilliseconds;
-
-            Timer1.Enabled = true;
         }
-        
 
         private void DisposeWave()
         {
-            Timer1.Enabled = false;
-            PausePlay.Enabled = false;
-            Stop.Enabled = false;
-            MusicTimeTrackBar.Maximum = 0;
-            MusicDurationTime.Text = "00:00:00";
-            MusicCurrentTime.Text = "00:00:00";
             if (output != null)
             {
                 if (output.PlaybackState == NAudio.Wave.PlaybackState.Playing)

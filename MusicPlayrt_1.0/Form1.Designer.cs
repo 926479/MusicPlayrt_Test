@@ -93,6 +93,10 @@ namespace MusicPlayrt_1._0
             this.MusicTimeTrackBar.Size = new System.Drawing.Size(188, 18);
             this.MusicTimeTrackBar.TabIndex = 4;
             this.MusicTimeTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
+            //this.MusicTimeTrackBar.Scroll += new System.EventHandler(this.MusicTimeTrackBar_Scroll);
+            //this.MusicTimeTrackBar.MouseHover += new System.EventHandler(this.MusicTimeTrackBar_MouseHover);
+            this.MusicTimeTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MusicTimeTrackBar_MouseDown);
+            this.MusicTimeTrackBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MusicTimeTrackBar_MouseUp);
             // 
             // MusicCurrentTime
             // 

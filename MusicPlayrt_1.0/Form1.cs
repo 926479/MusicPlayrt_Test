@@ -14,6 +14,8 @@ namespace MusicPlayrt_1._0
     {
         private NAudio.Wave.BlockAlignReductionStream music = null;
         private NAudio.Wave.DirectSoundOut output = null;
+
+        private bool TrackbarSlid = false;
        
 
         public Form1()
@@ -49,6 +51,7 @@ namespace MusicPlayrt_1._0
             MusicTimeTrackBar.Maximum = (int)duration.TotalMilliseconds;
             MusicDurationTime.Text = duration.ToString(@"hh\:mm\:ss");
             output.Play();
+            MusicTimeTrackBar.Enabled = true;
             Timer1.Enabled = true;
             PausePlay.Enabled = true;
             Stop.Enabled = true;
@@ -81,13 +84,53 @@ namespace MusicPlayrt_1._0
         private void Timer1_Tick(object sender, EventArgs e)
         {
             Timer1.Enabled = false;
-
-            var nowTime = music.CurrentTime;
-            MusicCurrentTime.Text = nowTime.ToString(@"hh\:mm\:ss");
-            MusicTimeTrackBar.Value = (int)nowTime.TotalMilliseconds;
-
+            if ((music.TotalTime) - music.CurrentTime < TimeSpan.FromMilliseconds(100))
+            {
+                output.Stop();
+                DisposeWave();
+            }
+            if (!TrackbarSlid)
+            {
+                var nowTime = music.CurrentTime;
+                MusicTimeTrackBar.Value = (int)nowTime.TotalMilliseconds;
+                MusicCurrentTime.Text = nowTime.ToString(@"hh\:mm\:ss");
+            }
             Timer1.Enabled = true;
         }
+  
+
+        /*
+        private void MusicTimeTrackBar_Scroll(object sender, EventArgs e)
+        {
+            TrackbarSlid = true;
+            try
+            {
+                music.CurrentTime = TimeSpan.FromMilliseconds(MusicTimeTrackBar.Value);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        */
+        /*
+        private void MusicTimeTrackBar_MouseHover(object sender, EventArgs e)
+        {
+            MusicCurrentTime.Text = TimeSpan.FromMilliseconds(MusicTimeTrackBar.Value).ToString(@"hh:\mm:\ss");
+        }
+        */
+
+        private void MusicTimeTrackBar_MouseDown(object sender, MouseEventArgs e)
+        {
+            TrackbarSlid = true;
+        }
+
+        private void MusicTimeTrackBar_MouseUp(object sender, MouseEventArgs e)
+        {
+            music.CurrentTime = TimeSpan.FromMilliseconds(MusicTimeTrackBar.Value);
+            TrackbarSlid = false;
+        }
+
         
 
         private void DisposeWave()
@@ -96,6 +139,8 @@ namespace MusicPlayrt_1._0
             PausePlay.Enabled = false;
             Stop.Enabled = false;
             MusicTimeTrackBar.Maximum = 0;
+            MusicTimeTrackBar.Value = 0;
+            MusicTimeTrackBar.Enabled = false;
             MusicDurationTime.Text = "00:00:00";
             MusicCurrentTime.Text = "00:00:00";
             if (output != null)

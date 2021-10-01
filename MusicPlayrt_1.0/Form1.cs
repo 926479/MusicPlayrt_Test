@@ -48,7 +48,7 @@ namespace MusicPlayrt_1._0
             output = new NAudio.Wave.DirectSoundOut();
             output.Init(music);
             var duration = music.TotalTime;
-            MusicTimeTrackBar.Maximum = (int)duration.TotalMilliseconds;
+            MusicTimeTrackBar.Maximum = (int)duration.TotalSeconds;
             MusicDurationTime.Text = duration.ToString(@"hh\:mm\:ss");
             output.Play();
             MusicTimeTrackBar.Enabled = true;
@@ -84,15 +84,15 @@ namespace MusicPlayrt_1._0
         private void Timer1_Tick(object sender, EventArgs e)
         {
             Timer1.Enabled = false;
-            if ((music.TotalTime) - music.CurrentTime < TimeSpan.FromMilliseconds(100))
+            if (music.TotalTime - music.CurrentTime < TimeSpan.FromMilliseconds(100))
             {
                 output.Stop();
                 DisposeWave();
             }
-            if (!TrackbarSlid)
+            else if (!TrackbarSlid)
             {
                 var nowTime = music.CurrentTime;
-                MusicTimeTrackBar.Value = (int)nowTime.TotalMilliseconds;
+                MusicTimeTrackBar.Value = (int)nowTime.TotalSeconds;
                 MusicCurrentTime.Text = nowTime.ToString(@"hh\:mm\:ss");
             }
             Timer1.Enabled = true;
@@ -127,8 +127,17 @@ namespace MusicPlayrt_1._0
 
         private void MusicTimeTrackBar_MouseUp(object sender, MouseEventArgs e)
         {
-            music.CurrentTime = TimeSpan.FromMilliseconds(MusicTimeTrackBar.Value);
+            Timer1.Enabled = false;
+            try
+            {
+                music.CurrentTime = TimeSpan.FromSeconds(MusicTimeTrackBar.Value);
+            }
+            catch(Exception exc)
+            {
+                MessageBox.Show(exc.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             TrackbarSlid = false;
+            Timer1.Enabled = true;
         }
 
         

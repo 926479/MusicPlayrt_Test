@@ -6,6 +6,8 @@ using `NAudio` `taglib-sharp`
 
 ### the first version
 
+only mp3 & wav
+
 can show the title, album, artist, front cover picture, single time
 
 just can play one single. the trackbar sometime will be broken

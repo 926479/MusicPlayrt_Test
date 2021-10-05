@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace MusicPlayrt_1._0
 {
@@ -27,7 +28,7 @@ namespace MusicPlayrt_1._0
         private void ReadFile_Click(object sender, EventArgs e)
         {
             var open = new OpenFileDialog();
-            open.Filter = "Audio file (*.mp3;*.wav)|*.mp3;*.wav";
+            open.Filter = "*.mp3;*.wav | *.mp3;*.wav";
             if (open.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -44,12 +45,35 @@ namespace MusicPlayrt_1._0
                 music = new NAudio.Wave.BlockAlignReductionStream(pcm);
             }
             else throw new InvalidOperationException("Not a correct audio file type.");
-
+            
+            var Tfile = TagLib.File.Create(System.IO.Path.GetFullPath(open.FileName));
+            if (Tfile.Tag.Title != null)
+                Title.Text = Tfile.Tag.Title;
+            else
+                Title.Text = "??????";
+            if(Tfile.Tag.Album != null)
+                Album.Text = Tfile.Tag.Album;
+            else
+                Album.Text = "??????";
+            if(Tfile.Tag.FirstAlbumArtist != null)
+                Artist.Text = Tfile.Tag.FirstAlbumArtist;
+            else
+                Artist.Text = "??????";
+            try
+            {
+                var AlbumImage = Tfile.Tag.Pictures[0].Data.Data;
+                AlbumCover.Image = Image.FromStream(new MemoryStream(AlbumImage));
+            }
+            catch
+            {
+                AlbumCover.Image = null;
+            }
             output = new NAudio.Wave.DirectSoundOut();
             output.Init(music);
             var duration = music.TotalTime;
             MusicTimeTrackBar.Maximum = (int)duration.TotalSeconds;
             MusicDurationTime.Text = duration.ToString(@"hh\:mm\:ss");
+            
             output.Play();
             MusicTimeTrackBar.Enabled = true;
             Timer1.Enabled = true;
@@ -84,20 +108,11 @@ namespace MusicPlayrt_1._0
         private void Timer1_Tick(object sender, EventArgs e)
         {
             Timer1.Enabled = false;
-            if (music.TotalTime - music.CurrentTime < TimeSpan.FromMilliseconds(100))
-            {
-                output.Stop();
-                DisposeWave();
-            }
-            else if (!TrackbarSlid)
-            {
-                var nowTime = music.CurrentTime;
-                MusicTimeTrackBar.Value = (int)nowTime.TotalSeconds;
-                MusicCurrentTime.Text = nowTime.ToString(@"hh\:mm\:ss");
-            }
+            if (music != null)
+                UpdataUI();
             Timer1.Enabled = true;
         }
-  
+
 
         /*
         private void MusicTimeTrackBar_Scroll(object sender, EventArgs e)
@@ -113,16 +128,23 @@ namespace MusicPlayrt_1._0
             }
         }
         */
-        /*
-        private void MusicTimeTrackBar_MouseHover(object sender, EventArgs e)
-        {
-            MusicCurrentTime.Text = TimeSpan.FromMilliseconds(MusicTimeTrackBar.Value).ToString(@"hh:\mm:\ss");
-        }
-        */
 
-        private void MusicTimeTrackBar_MouseDown(object sender, MouseEventArgs e)
+        private void MusicTimeTrackBar_MouseEnter(object sender, EventArgs e)
         {
             TrackbarSlid = true;
+        }
+
+        /*
+        private void MusicTimeTrackBar_MouseHover(object sender, System.EventArgs e)
+        {
+            TrackbarSlid = true;
+          //  Artist.Text = sender.GetType().ToString( TimeSpan.FromSeconds (MusicTimeTrackBar.Value));
+//            MusicCurrentTime.Text = TimeSpan.FromMilliseconds(MusicTimeTrackBar.Value).ToString(@"hh:\mm:\ss");
+        }
+        */
+        private void MusicTimeTrackBar_MouseLeave(object sender, EventArgs e)
+        {
+            TrackbarSlid = false;
         }
 
         private void MusicTimeTrackBar_MouseUp(object sender, MouseEventArgs e)
@@ -140,7 +162,20 @@ namespace MusicPlayrt_1._0
             Timer1.Enabled = true;
         }
 
-        
+        private void UpdataUI()
+        {
+            if (music.TotalTime - music.CurrentTime < TimeSpan.FromMilliseconds(100))
+            {
+                output.Stop();
+                DisposeWave();
+            }
+            else if (!TrackbarSlid)
+            {
+                var nowTime = music.CurrentTime;
+                MusicTimeTrackBar.Value = (int)nowTime.TotalSeconds;
+                MusicCurrentTime.Text = nowTime.ToString(@"hh\:mm\:ss");
+            }
+        }
 
         private void DisposeWave()
         {
@@ -167,5 +202,7 @@ namespace MusicPlayrt_1._0
                 music = null;
             }
         }
+
+        
     }
 }

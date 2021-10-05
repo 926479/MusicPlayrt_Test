@@ -47,7 +47,7 @@ namespace MusicPlayrt_1._0
             // 
             // ReadFile
             // 
-            this.ReadFile.Location = new System.Drawing.Point(34, 382);
+            this.ReadFile.Location = new System.Drawing.Point(12, 382);
             this.ReadFile.Name = "ReadFile";
             this.ReadFile.Size = new System.Drawing.Size(73, 46);
             this.ReadFile.TabIndex = 0;
@@ -58,7 +58,7 @@ namespace MusicPlayrt_1._0
             // PausePlay
             // 
             this.PausePlay.Enabled = false;
-            this.PausePlay.Location = new System.Drawing.Point(146, 382);
+            this.PausePlay.Location = new System.Drawing.Point(117, 382);
             this.PausePlay.Name = "PausePlay";
             this.PausePlay.Size = new System.Drawing.Size(73, 46);
             this.PausePlay.TabIndex = 1;
@@ -69,7 +69,7 @@ namespace MusicPlayrt_1._0
             // Stop
             // 
             this.Stop.Enabled = false;
-            this.Stop.Location = new System.Drawing.Point(255, 382);
+            this.Stop.Location = new System.Drawing.Point(233, 382);
             this.Stop.Name = "Stop";
             this.Stop.Size = new System.Drawing.Size(73, 46);
             this.Stop.TabIndex = 2;
@@ -79,28 +79,28 @@ namespace MusicPlayrt_1._0
             // 
             // AlbumCover
             // 
-            this.AlbumCover.Location = new System.Drawing.Point(34, 7);
+            this.AlbumCover.Location = new System.Drawing.Point(12, 12);
             this.AlbumCover.Name = "AlbumCover";
             this.AlbumCover.Size = new System.Drawing.Size(294, 287);
+            this.AlbumCover.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.AlbumCover.TabIndex = 3;
             this.AlbumCover.TabStop = false;
             // 
             // MusicTimeTrackBar
             // 
             this.MusicTimeTrackBar.AutoSize = false;
-            this.MusicTimeTrackBar.Location = new System.Drawing.Point(86, 358);
+            this.MusicTimeTrackBar.Location = new System.Drawing.Point(66, 361);
             this.MusicTimeTrackBar.Name = "MusicTimeTrackBar";
             this.MusicTimeTrackBar.Size = new System.Drawing.Size(188, 18);
             this.MusicTimeTrackBar.TabIndex = 4;
             this.MusicTimeTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
-            //this.MusicTimeTrackBar.Scroll += new System.EventHandler(this.MusicTimeTrackBar_Scroll);
-            //this.MusicTimeTrackBar.MouseHover += new System.EventHandler(this.MusicTimeTrackBar_MouseHover);
-            this.MusicTimeTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MusicTimeTrackBar_MouseDown);
+            this.MusicTimeTrackBar.MouseEnter += new System.EventHandler(this.MusicTimeTrackBar_MouseEnter);
+            this.MusicTimeTrackBar.MouseLeave += new System.EventHandler(this.MusicTimeTrackBar_MouseLeave);
             this.MusicTimeTrackBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MusicTimeTrackBar_MouseUp);
             // 
             // MusicCurrentTime
             // 
-            this.MusicCurrentTime.Location = new System.Drawing.Point(32, 358);
+            this.MusicCurrentTime.Location = new System.Drawing.Point(12, 361);
             this.MusicCurrentTime.Name = "MusicCurrentTime";
             this.MusicCurrentTime.Size = new System.Drawing.Size(48, 18);
             this.MusicCurrentTime.TabIndex = 5;
@@ -108,7 +108,7 @@ namespace MusicPlayrt_1._0
             // 
             // Title
             // 
-            this.Title.Location = new System.Drawing.Point(32, 287);
+            this.Title.Location = new System.Drawing.Point(12, 306);
             this.Title.Name = "Title";
             this.Title.Size = new System.Drawing.Size(296, 22);
             this.Title.TabIndex = 6;
@@ -116,7 +116,7 @@ namespace MusicPlayrt_1._0
             // 
             // Album
             // 
-            this.Album.Location = new System.Drawing.Point(32, 309);
+            this.Album.Location = new System.Drawing.Point(12, 324);
             this.Album.Name = "Album";
             this.Album.Size = new System.Drawing.Size(296, 22);
             this.Album.TabIndex = 7;
@@ -124,7 +124,7 @@ namespace MusicPlayrt_1._0
             // 
             // Artist
             // 
-            this.Artist.Location = new System.Drawing.Point(32, 331);
+            this.Artist.Location = new System.Drawing.Point(12, 339);
             this.Artist.Name = "Artist";
             this.Artist.Size = new System.Drawing.Size(296, 22);
             this.Artist.TabIndex = 8;
@@ -132,7 +132,7 @@ namespace MusicPlayrt_1._0
             // 
             // MusicDurationTime
             // 
-            this.MusicDurationTime.Location = new System.Drawing.Point(280, 358);
+            this.MusicDurationTime.Location = new System.Drawing.Point(258, 361);
             this.MusicDurationTime.Name = "MusicDurationTime";
             this.MusicDurationTime.Size = new System.Drawing.Size(48, 18);
             this.MusicDurationTime.TabIndex = 9;
@@ -146,7 +146,7 @@ namespace MusicPlayrt_1._0
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(358, 450);
+            this.ClientSize = new System.Drawing.Size(329, 450);
             this.Controls.Add(this.MusicDurationTime);
             this.Controls.Add(this.Artist);
             this.Controls.Add(this.Album);
@@ -158,7 +158,7 @@ namespace MusicPlayrt_1._0
             this.Controls.Add(this.PausePlay);
             this.Controls.Add(this.ReadFile);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "MusicPlayr";
             ((System.ComponentModel.ISupportInitialize)(this.AlbumCover)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MusicTimeTrackBar)).EndInit();
             this.ResumeLayout(false);

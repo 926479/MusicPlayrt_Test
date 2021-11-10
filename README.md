@@ -6,7 +6,7 @@ using `NAudio` `taglib-sharp`
 
 ### the first version
 
-only mp3 & wav
+only wav, flac & mp3
 
 can show the title, album, artist, front cover picture, single time
 

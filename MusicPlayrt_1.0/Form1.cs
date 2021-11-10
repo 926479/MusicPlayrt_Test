@@ -13,10 +13,12 @@ namespace MusicPlayrt_1._0
 {
     public partial class Form1 : Form
     {
-        private NAudio.Wave.BlockAlignReductionStream music = null;
-        private NAudio.Wave.DirectSoundOut output = null;
+        private NAudio.Wave.AudioFileReader music = null;
+        private NAudio.Wave.WaveOutEvent output = null;
 
         private bool TrackbarSlid = false;
+
+        string SetPath;
        
 
         public Form1()
@@ -24,61 +26,51 @@ namespace MusicPlayrt_1._0
             InitializeComponent();
             DisposeWave();
         }
+
        
+
         private void ReadFile_Click(object sender, EventArgs e)
         {
-            var open = new OpenFileDialog();
-            open.Filter = "*.mp3;*.wav | *.mp3;*.wav";
-            if (open.ShowDialog() != DialogResult.OK)
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
-                return;
+                SetPath = dialog.SelectedPath;
+                try
+                {
+                    var s1 = Directory.EnumerateFiles(SetPath, "*.wav", SearchOption.AllDirectories);
+                    var s2 = Directory.EnumerateFiles(SetPath, "*.flac", SearchOption.AllDirectories);
+                    var s3 = Directory.EnumerateFiles(SetPath, "*.mp3", SearchOption.AllDirectories);
+                    TreeNode wav = new TreeNode("wav");
+                    TreeView1.Nodes.Add(wav);
+                    foreach (string m in s1)
+                    {
+                        string wav_1 = m.Substring(m.LastIndexOf("\\") + 1, m.Length - m.LastIndexOf("\\") - 1);
+                        TreeNode node = new TreeNode(wav_1);
+                        wav.Nodes.Add(node);
+                    }
+                    TreeNode flac = new TreeNode("flac");
+                    TreeView1.Nodes.Add(flac);
+                    foreach (string m in s2)
+                    {
+                        string flac_1 = m.Substring(m.LastIndexOf("\\") + 1, m.Length - m.LastIndexOf("\\") - 1);
+                        TreeNode node = new TreeNode(flac_1);
+                        flac.Nodes.Add(node);
+                    }
+                    TreeNode mp3 = new TreeNode("mp3");
+                    TreeView1.Nodes.Add(mp3);
+                    foreach(string m in s3)
+                    {
+                        string mp3_1 = m.Substring(m.LastIndexOf("\\") + 1, m.Length - m.LastIndexOf("\\") - 1);
+                        TreeNode node = new TreeNode(mp3_1);
+                        mp3.Nodes.Add(node);
+                    }
+                    
+                }
+                catch (Exception exc)
+                {
+                    MessageBox.Show(exc.Message);
+                }
             }
-            DisposeWave();
-            if (open.FileName.EndsWith(".mp3"))
-            {
-                NAudio.Wave.WaveStream pcm = NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(new NAudio.Wave.Mp3FileReader(open.FileName));
-                music = new NAudio.Wave.BlockAlignReductionStream(pcm);
-            }
-            else if (open.FileName.EndsWith(".wav"))
-            {
-                NAudio.Wave.WaveStream pcm = new NAudio.Wave.WaveChannel32(new NAudio.Wave.WaveFileReader(open.FileName));
-                music = new NAudio.Wave.BlockAlignReductionStream(pcm);
-            }
-            else throw new InvalidOperationException("Not a correct audio file type.");
-            
-            var Tfile = TagLib.File.Create(System.IO.Path.GetFullPath(open.FileName));
-            if (Tfile.Tag.Title != null)
-                Title.Text = Tfile.Tag.Title;
-            else
-                Title.Text = "??????";
-            if(Tfile.Tag.Album != null)
-                Album.Text = Tfile.Tag.Album;
-            else
-                Album.Text = "??????";
-            if(Tfile.Tag.FirstAlbumArtist != null)
-                Artist.Text = Tfile.Tag.FirstAlbumArtist;
-            else
-                Artist.Text = "??????";
-            try
-            {
-                var AlbumImage = Tfile.Tag.Pictures[0].Data.Data;
-                AlbumCover.Image = Image.FromStream(new MemoryStream(AlbumImage));
-            }
-            catch
-            {
-                AlbumCover.Image = null;
-            }
-            output = new NAudio.Wave.DirectSoundOut();
-            output.Init(music);
-            var duration = music.TotalTime;
-            MusicTimeTrackBar.Maximum = (int)duration.TotalSeconds;
-            MusicDurationTime.Text = duration.ToString(@"hh\:mm\:ss");
-            
-            output.Play();
-            MusicTimeTrackBar.Enabled = true;
-            Timer1.Enabled = true;
-            PausePlay.Enabled = true;
-            Stop.Enabled = true;
         }
 
         private void PausePlay_Click(object sender, EventArgs e)
@@ -114,34 +106,12 @@ namespace MusicPlayrt_1._0
         }
 
 
-        /*
-        private void MusicTimeTrackBar_Scroll(object sender, EventArgs e)
-        {
-            TrackbarSlid = true;
-            try
-            {
-                music.CurrentTime = TimeSpan.FromMilliseconds(MusicTimeTrackBar.Value);
-            }
-            catch (Exception exc)
-            {
-                MessageBox.Show(exc.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-        */
-
         private void MusicTimeTrackBar_MouseEnter(object sender, EventArgs e)
         {
             TrackbarSlid = true;
         }
 
-        /*
-        private void MusicTimeTrackBar_MouseHover(object sender, System.EventArgs e)
-        {
-            TrackbarSlid = true;
-          //  Artist.Text = sender.GetType().ToString( TimeSpan.FromSeconds (MusicTimeTrackBar.Value));
-//            MusicCurrentTime.Text = TimeSpan.FromMilliseconds(MusicTimeTrackBar.Value).ToString(@"hh:\mm:\ss");
-        }
-        */
+        
         private void MusicTimeTrackBar_MouseLeave(object sender, EventArgs e)
         {
             TrackbarSlid = false;
@@ -203,6 +173,50 @@ namespace MusicPlayrt_1._0
             }
         }
 
-        
+        private void TreeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            var open = Directory.GetFiles(SetPath, e.Node.Text, SearchOption.AllDirectories);
+            foreach(string OpenFileName in open)
+            {
+                DisposeWave();
+                music = new NAudio.Wave.AudioFileReader(OpenFileName);
+                var Tfile = TagLib.File.Create(System.IO.Path.GetFullPath(OpenFileName));
+                if (Tfile.Tag.Title != null)
+                    Title.Text = Tfile.Tag.Title;
+                else
+                    Title.Text = "??????";
+                if (Tfile.Tag.Album != null)
+                    Album.Text = Tfile.Tag.Album;
+                else
+                    Album.Text = "??????";
+                if (Tfile.Tag.FirstAlbumArtist != null)
+                    Artist.Text = Tfile.Tag.FirstAlbumArtist;
+                else
+                    Artist.Text = "??????";
+                try
+                {
+                    var AlbumImage = Tfile.Tag.Pictures[0].Data.Data;
+                    AlbumCover.Image = Image.FromStream(new MemoryStream(AlbumImage));
+                }
+                catch
+                {
+                    AlbumCover.Image = null;
+                }
+            }
+            
+
+
+            output = new NAudio.Wave.WaveOutEvent();
+            output.Init(music);
+            var duration = music.TotalTime;
+            MusicTimeTrackBar.Maximum = (int)duration.TotalSeconds;
+            MusicDurationTime.Text = duration.ToString(@"hh\:mm\:ss");
+
+            output.Play();
+            MusicTimeTrackBar.Enabled = true;
+            Timer1.Enabled = true;
+            PausePlay.Enabled = true;
+            Stop.Enabled = true;
+        }
     }
 }

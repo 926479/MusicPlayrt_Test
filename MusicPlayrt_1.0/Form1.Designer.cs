@@ -41,6 +41,7 @@ namespace MusicPlayrt_1._0
             this.Artist = new System.Windows.Forms.Label();
             this.MusicDurationTime = new System.Windows.Forms.Label();
             this.Timer1 = new System.Windows.Forms.Timer(this.components);
+            this.TreeView1 = new System.Windows.Forms.TreeView();
             ((System.ComponentModel.ISupportInitialize)(this.AlbumCover)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MusicTimeTrackBar)).BeginInit();
             this.SuspendLayout();
@@ -58,7 +59,7 @@ namespace MusicPlayrt_1._0
             // PausePlay
             // 
             this.PausePlay.Enabled = false;
-            this.PausePlay.Location = new System.Drawing.Point(117, 382);
+            this.PausePlay.Location = new System.Drawing.Point(123, 382);
             this.PausePlay.Name = "PausePlay";
             this.PausePlay.Size = new System.Drawing.Size(73, 46);
             this.PausePlay.TabIndex = 1;
@@ -142,11 +143,20 @@ namespace MusicPlayrt_1._0
             // 
             this.Timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
+            // TreeView1
+            // 
+            this.TreeView1.Location = new System.Drawing.Point(319, 12);
+            this.TreeView1.Name = "TreeView1";
+            this.TreeView1.Size = new System.Drawing.Size(258, 366);
+            this.TreeView1.TabIndex = 10;
+            this.TreeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView1_AfterSelect);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(329, 450);
+            this.ClientSize = new System.Drawing.Size(587, 450);
+            this.Controls.Add(this.TreeView1);
             this.Controls.Add(this.MusicDurationTime);
             this.Controls.Add(this.Artist);
             this.Controls.Add(this.Album);
@@ -178,6 +188,7 @@ namespace MusicPlayrt_1._0
         private System.Windows.Forms.Label Artist;
         private System.Windows.Forms.Label MusicDurationTime;
         private System.Windows.Forms.Timer Timer1;
+        private System.Windows.Forms.TreeView TreeView1;
     }
 }
 

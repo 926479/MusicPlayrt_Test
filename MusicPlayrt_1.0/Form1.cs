@@ -16,7 +16,7 @@ namespace MusicPlayrt_1._0
         private NAudio.Wave.AudioFileReader music = null;
         private NAudio.Wave.WaveOutEvent output = null;
 
-        private bool TrackbarSlid = false;
+        private bool TrackBarSlid = false;
 
         string SetPath;
        
@@ -41,7 +41,7 @@ namespace MusicPlayrt_1._0
                     var s2 = Directory.EnumerateFiles(SetPath, "*.flac", SearchOption.AllDirectories);
                     var s3 = Directory.EnumerateFiles(SetPath, "*.mp3", SearchOption.AllDirectories);
                     TreeNode wav = new TreeNode("wav");
-                    TreeView1.Nodes.Add(wav);
+                    Library.Nodes.Add(wav);
                     foreach (string m in s1)
                     {
                         string wav_1 = m.Substring(m.LastIndexOf("\\") + 1, m.Length - m.LastIndexOf("\\") - 1);
@@ -49,7 +49,7 @@ namespace MusicPlayrt_1._0
                         wav.Nodes.Add(node);
                     }
                     TreeNode flac = new TreeNode("flac");
-                    TreeView1.Nodes.Add(flac);
+                    Library.Nodes.Add(flac);
                     foreach (string m in s2)
                     {
                         string flac_1 = m.Substring(m.LastIndexOf("\\") + 1, m.Length - m.LastIndexOf("\\") - 1);
@@ -57,7 +57,7 @@ namespace MusicPlayrt_1._0
                         flac.Nodes.Add(node);
                     }
                     TreeNode mp3 = new TreeNode("mp3");
-                    TreeView1.Nodes.Add(mp3);
+                    Library.Nodes.Add(mp3);
                     foreach(string m in s3)
                     {
                         string mp3_1 = m.Substring(m.LastIndexOf("\\") + 1, m.Length - m.LastIndexOf("\\") - 1);
@@ -106,16 +106,12 @@ namespace MusicPlayrt_1._0
         }
 
 
-        private void MusicTimeTrackBar_MouseEnter(object sender, EventArgs e)
+        private void MusicTimeTrackBar_MouseDown(object sender, MouseEventArgs e)
         {
-            TrackbarSlid = true;
+            TrackBarSlid = true;
         }
-
         
-        private void MusicTimeTrackBar_MouseLeave(object sender, EventArgs e)
-        {
-            TrackbarSlid = false;
-        }
+        
 
         private void MusicTimeTrackBar_MouseUp(object sender, MouseEventArgs e)
         {
@@ -124,13 +120,14 @@ namespace MusicPlayrt_1._0
             {
                 music.CurrentTime = TimeSpan.FromSeconds(MusicTimeTrackBar.Value);
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 MessageBox.Show(exc.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            TrackbarSlid = false;
             Timer1.Enabled = true;
+            TrackBarSlid = false;
         }
+
 
         private void UpdataUI()
         {
@@ -139,10 +136,11 @@ namespace MusicPlayrt_1._0
                 output.Stop();
                 DisposeWave();
             }
-            else if (!TrackbarSlid)
+            else
             {
                 var nowTime = music.CurrentTime;
-                MusicTimeTrackBar.Value = (int)nowTime.TotalSeconds;
+                if(!TrackBarSlid)
+                    MusicTimeTrackBar.Value = (int)nowTime.TotalSeconds;
                 MusicCurrentTime.Text = nowTime.ToString(@"hh\:mm\:ss");
             }
         }
@@ -157,6 +155,7 @@ namespace MusicPlayrt_1._0
             MusicTimeTrackBar.Enabled = false;
             MusicDurationTime.Text = "00:00:00";
             MusicCurrentTime.Text = "00:00:00";
+            AlbumCover.Image = null;
             if (output != null)
             {
                 if (output.PlaybackState == NAudio.Wave.PlaybackState.Playing)
@@ -175,6 +174,7 @@ namespace MusicPlayrt_1._0
 
         private void TreeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            PlayList.Items.Clear();
             var open = Directory.GetFiles(SetPath, e.Node.Text, SearchOption.AllDirectories);
             foreach(string OpenFileName in open)
             {
@@ -204,8 +204,6 @@ namespace MusicPlayrt_1._0
                 }
             }
             
-
-
             output = new NAudio.Wave.WaveOutEvent();
             output.Init(music);
             var duration = music.TotalTime;
@@ -218,5 +216,7 @@ namespace MusicPlayrt_1._0
             PausePlay.Enabled = true;
             Stop.Enabled = true;
         }
+
+        
     }
 }

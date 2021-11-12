@@ -41,7 +41,8 @@ namespace MusicPlayrt_1._0
             this.Artist = new System.Windows.Forms.Label();
             this.MusicDurationTime = new System.Windows.Forms.Label();
             this.Timer1 = new System.Windows.Forms.Timer(this.components);
-            this.TreeView1 = new System.Windows.Forms.TreeView();
+            this.Library = new System.Windows.Forms.TreeView();
+            this.PlayList = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.AlbumCover)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MusicTimeTrackBar)).BeginInit();
             this.SuspendLayout();
@@ -80,6 +81,7 @@ namespace MusicPlayrt_1._0
             // 
             // AlbumCover
             // 
+            this.AlbumCover.BackColor = System.Drawing.SystemColors.Desktop;
             this.AlbumCover.Location = new System.Drawing.Point(12, 12);
             this.AlbumCover.Name = "AlbumCover";
             this.AlbumCover.Size = new System.Drawing.Size(294, 287);
@@ -95,8 +97,7 @@ namespace MusicPlayrt_1._0
             this.MusicTimeTrackBar.Size = new System.Drawing.Size(188, 18);
             this.MusicTimeTrackBar.TabIndex = 4;
             this.MusicTimeTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.MusicTimeTrackBar.MouseEnter += new System.EventHandler(this.MusicTimeTrackBar_MouseEnter);
-            this.MusicTimeTrackBar.MouseLeave += new System.EventHandler(this.MusicTimeTrackBar_MouseLeave);
+            this.MusicTimeTrackBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MusicTimeTrackBar_MouseDown);
             this.MusicTimeTrackBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MusicTimeTrackBar_MouseUp);
             // 
             // MusicCurrentTime
@@ -143,20 +144,32 @@ namespace MusicPlayrt_1._0
             // 
             this.Timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
-            // TreeView1
+            // Library
             // 
-            this.TreeView1.Location = new System.Drawing.Point(319, 12);
-            this.TreeView1.Name = "TreeView1";
-            this.TreeView1.Size = new System.Drawing.Size(258, 366);
-            this.TreeView1.TabIndex = 10;
-            this.TreeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView1_AfterSelect);
+            this.Library.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.Library.Location = new System.Drawing.Point(319, 12);
+            this.Library.Name = "Library";
+            this.Library.Size = new System.Drawing.Size(258, 366);
+            this.Library.TabIndex = 10;
+            this.Library.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView1_AfterSelect);
+            // 
+            // PlayList
+            // 
+            this.PlayList.FormattingEnabled = true;
+            this.PlayList.ItemHeight = 12;
+            this.PlayList.Location = new System.Drawing.Point(594, 12);
+            this.PlayList.Name = "PlayList";
+            this.PlayList.Size = new System.Drawing.Size(235, 364);
+            this.PlayList.TabIndex = 11;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(587, 450);
-            this.Controls.Add(this.TreeView1);
+            this.BackColor = System.Drawing.SystemColors.GrayText;
+            this.ClientSize = new System.Drawing.Size(851, 450);
+            this.Controls.Add(this.PlayList);
+            this.Controls.Add(this.Library);
             this.Controls.Add(this.MusicDurationTime);
             this.Controls.Add(this.Artist);
             this.Controls.Add(this.Album);
@@ -188,7 +201,8 @@ namespace MusicPlayrt_1._0
         private System.Windows.Forms.Label Artist;
         private System.Windows.Forms.Label MusicDurationTime;
         private System.Windows.Forms.Timer Timer1;
-        private System.Windows.Forms.TreeView TreeView1;
+        private System.Windows.Forms.TreeView Library;
+        private System.Windows.Forms.ListBox PlayList;
     }
 }
 

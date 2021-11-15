@@ -43,13 +43,17 @@ namespace MusicPlayrt_1._0
             this.Timer1 = new System.Windows.Forms.Timer(this.components);
             this.Library = new System.Windows.Forms.TreeView();
             this.PlayList = new System.Windows.Forms.ListBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.Previous = new System.Windows.Forms.Button();
+            this.Next = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.AlbumCover)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MusicTimeTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
             // ReadFile
             // 
-            this.ReadFile.Location = new System.Drawing.Point(12, 382);
+            this.ReadFile.Location = new System.Drawing.Point(368, 383);
             this.ReadFile.Name = "ReadFile";
             this.ReadFile.Size = new System.Drawing.Size(73, 46);
             this.ReadFile.TabIndex = 0;
@@ -60,7 +64,7 @@ namespace MusicPlayrt_1._0
             // PausePlay
             // 
             this.PausePlay.Enabled = false;
-            this.PausePlay.Location = new System.Drawing.Point(123, 382);
+            this.PausePlay.Location = new System.Drawing.Point(86, 383);
             this.PausePlay.Name = "PausePlay";
             this.PausePlay.Size = new System.Drawing.Size(73, 46);
             this.PausePlay.TabIndex = 1;
@@ -71,7 +75,7 @@ namespace MusicPlayrt_1._0
             // Stop
             // 
             this.Stop.Enabled = false;
-            this.Stop.Location = new System.Drawing.Point(233, 382);
+            this.Stop.Location = new System.Drawing.Point(238, 383);
             this.Stop.Name = "Stop";
             this.Stop.Size = new System.Drawing.Size(73, 46);
             this.Stop.TabIndex = 2;
@@ -147,20 +151,59 @@ namespace MusicPlayrt_1._0
             // Library
             // 
             this.Library.BackColor = System.Drawing.SystemColors.ButtonShadow;
-            this.Library.Location = new System.Drawing.Point(319, 12);
+            this.Library.Location = new System.Drawing.Point(319, 32);
             this.Library.Name = "Library";
-            this.Library.Size = new System.Drawing.Size(258, 366);
+            this.Library.Size = new System.Drawing.Size(258, 346);
             this.Library.TabIndex = 10;
-            this.Library.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView1_AfterSelect);
+            this.Library.DoubleClick += new System.EventHandler(this.Library_DoubleClick);
             // 
             // PlayList
             // 
             this.PlayList.FormattingEnabled = true;
             this.PlayList.ItemHeight = 12;
-            this.PlayList.Location = new System.Drawing.Point(594, 12);
+            this.PlayList.Location = new System.Drawing.Point(594, 36);
             this.PlayList.Name = "PlayList";
-            this.PlayList.Size = new System.Drawing.Size(235, 364);
+            this.PlayList.Size = new System.Drawing.Size(235, 340);
             this.PlayList.TabIndex = 11;
+            this.PlayList.DoubleClick += new System.EventHandler(this.PlayList_DoubleClick);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(420, 12);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(40, 12);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "Library";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(695, 12);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(42, 12);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "PlayList";
+            // 
+            // Previous
+            // 
+            this.Previous.Location = new System.Drawing.Point(13, 382);
+            this.Previous.Name = "Previous";
+            this.Previous.Size = new System.Drawing.Size(67, 48);
+            this.Previous.TabIndex = 14;
+            this.Previous.Text = "Previous";
+            this.Previous.UseVisualStyleBackColor = true;
+            this.Previous.Click += new System.EventHandler(this.Previous_Click);
+            // 
+            // Next
+            // 
+            this.Next.Location = new System.Drawing.Point(165, 382);
+            this.Next.Name = "Next";
+            this.Next.Size = new System.Drawing.Size(67, 48);
+            this.Next.TabIndex = 15;
+            this.Next.Text = "Next";
+            this.Next.UseVisualStyleBackColor = true;
+            this.Next.Click += new System.EventHandler(this.Next_Click);
             // 
             // Form1
             // 
@@ -168,6 +211,10 @@ namespace MusicPlayrt_1._0
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GrayText;
             this.ClientSize = new System.Drawing.Size(851, 450);
+            this.Controls.Add(this.Next);
+            this.Controls.Add(this.Previous);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.PlayList);
             this.Controls.Add(this.Library);
             this.Controls.Add(this.MusicDurationTime);
@@ -185,6 +232,7 @@ namespace MusicPlayrt_1._0
             ((System.ComponentModel.ISupportInitialize)(this.AlbumCover)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MusicTimeTrackBar)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -203,6 +251,10 @@ namespace MusicPlayrt_1._0
         private System.Windows.Forms.Timer Timer1;
         private System.Windows.Forms.TreeView Library;
         private System.Windows.Forms.ListBox PlayList;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button Previous;
+        private System.Windows.Forms.Button Next;
     }
 }
 

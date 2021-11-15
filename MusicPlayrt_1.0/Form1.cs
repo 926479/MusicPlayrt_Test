@@ -135,6 +135,10 @@ namespace MusicPlayrt_1._0
             {
                 output.Stop();
                 DisposeWave();
+                if (PlayList.Items.Count - PlayList.SelectedIndex > 0)
+                {
+                    PlaySong(PlayList.SelectedIndex + 1);
+                }
             }
             else
             {
@@ -149,12 +153,17 @@ namespace MusicPlayrt_1._0
         {
             Timer1.Enabled = false;
             PausePlay.Enabled = false;
+            Previous.Enabled = false;
+            Next.Enabled = false;
             Stop.Enabled = false;
             MusicTimeTrackBar.Maximum = 0;
             MusicTimeTrackBar.Value = 0;
             MusicTimeTrackBar.Enabled = false;
             MusicDurationTime.Text = "00:00:00";
             MusicCurrentTime.Text = "00:00:00";
+            Title.Text = "Title";
+            Artist.Text = "Artist";
+            Album.Text = "Album";
             AlbumCover.Image = null;
             if (output != null)
             {
@@ -172,49 +181,103 @@ namespace MusicPlayrt_1._0
             }
         }
 
-        private void TreeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        private void Library_DoubleClick(object sender, EventArgs e)
         {
             PlayList.Items.Clear();
-            var open = Directory.GetFiles(SetPath, e.Node.Text, SearchOption.AllDirectories);
-            foreach(string OpenFileName in open)
+            TreeNode songs = Library.SelectedNode;
+            if (songs.Nodes.Count == 0)
+            {
+                //TreeNode[] songfile = new TreeNode[songs.Parent.Nodes.Count];
+                //songs.Parent.Nodes.CopyTo(songfile, 0);
+                //foreach(TreeNode song in songfile)
+                //{
+                PlayList.Items.Add(songs.Text);
+                //}
+                PlaySong(0);
+            }
+            else
+            {
+                foreach (TreeNode song in songs.Nodes)
+                {
+                    PlayList.Items.Add(song.Text);
+                }
+                PlaySong(0);
+            }
+        }
+
+        private void PlayList_DoubleClick(object sender, EventArgs e)
+        {
+            PlaySong(PlayList.SelectedIndex);
+        }
+
+        private void Next_Click(object sender, EventArgs e)
+        {
+            PlaySong(PlayList.SelectedIndex + 1);
+        }
+
+        private void Previous_Click(object sender, EventArgs e)
+        {
+            PlaySong(PlayList.SelectedIndex - 1);
+        }
+
+        private void PlaySong(int num)
+        {
+            //MessageBox.Show(Convert.ToString(num));
+            if (num > PlayList.Items.Count - 1)
+            {
+                PlayList.ClearSelected();
+                DisposeWave();
+            }
+            else if (num < 0)
             {
                 DisposeWave();
-                music = new NAudio.Wave.AudioFileReader(OpenFileName);
-                var Tfile = TagLib.File.Create(System.IO.Path.GetFullPath(OpenFileName));
-                if (Tfile.Tag.Title != null)
-                    Title.Text = Tfile.Tag.Title;
-                else
-                    Title.Text = "??????";
-                if (Tfile.Tag.Album != null)
-                    Album.Text = Tfile.Tag.Album;
-                else
-                    Album.Text = "??????";
-                if (Tfile.Tag.FirstAlbumArtist != null)
-                    Artist.Text = Tfile.Tag.FirstAlbumArtist;
-                else
-                    Artist.Text = "??????";
-                try
+            }
+            else
+            {
+                PlayList.SetSelected(num, true);
+                var open = Directory.GetFiles(SetPath, PlayList.SelectedItem.ToString(), SearchOption.AllDirectories);
+                foreach (string OpenFileName in open)
                 {
-                    var AlbumImage = Tfile.Tag.Pictures[0].Data.Data;
-                    AlbumCover.Image = Image.FromStream(new MemoryStream(AlbumImage));
-                }
-                catch
-                {
-                    AlbumCover.Image = null;
+                    DisposeWave();
+                    music = new NAudio.Wave.AudioFileReader(OpenFileName);
+                    var Tfile = TagLib.File.Create(System.IO.Path.GetFullPath(OpenFileName));
+                    if (Tfile.Tag.Title != null)
+                        Title.Text = Tfile.Tag.Title;
+                    else
+                        Title.Text = "??????";
+                    if (Tfile.Tag.Album != null)
+                        Album.Text = Tfile.Tag.Album;
+                    else
+                        Album.Text = "??????";
+                    if (Tfile.Tag.FirstAlbumArtist != null)
+                        Artist.Text = Tfile.Tag.FirstAlbumArtist;
+                    else
+                        Artist.Text = "??????";
+                    try
+                    {
+                        var AlbumImage = Tfile.Tag.Pictures[0].Data.Data;
+                        AlbumCover.Image = Image.FromStream(new MemoryStream(AlbumImage));
+                    }
+                    catch
+                    {
+                        AlbumCover.Image = null;
+                    }
+                    output = new NAudio.Wave.WaveOutEvent();
+                    output.Init(music);
+                    var duration = music.TotalTime;
+                    MusicTimeTrackBar.Maximum = (int)duration.TotalSeconds;
+                    MusicDurationTime.Text = duration.ToString(@"hh\:mm\:ss");
+
+                    output.Play();
+                    MusicTimeTrackBar.Enabled = true;
+                    Timer1.Enabled = true;
+                    PausePlay.Enabled = true;
+                    Previous.Enabled = true;
+                    Next.Enabled = true;
+                    Stop.Enabled = true;
                 }
             }
             
-            output = new NAudio.Wave.WaveOutEvent();
-            output.Init(music);
-            var duration = music.TotalTime;
-            MusicTimeTrackBar.Maximum = (int)duration.TotalSeconds;
-            MusicDurationTime.Text = duration.ToString(@"hh\:mm\:ss");
-
-            output.Play();
-            MusicTimeTrackBar.Enabled = true;
-            Timer1.Enabled = true;
-            PausePlay.Enabled = true;
-            Stop.Enabled = true;
         }
 
         

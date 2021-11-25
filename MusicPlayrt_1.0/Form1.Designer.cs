@@ -47,6 +47,7 @@ namespace MusicPlayrt_1._0
             this.label2 = new System.Windows.Forms.Label();
             this.Previous = new System.Windows.Forms.Button();
             this.Next = new System.Windows.Forms.Button();
+            this.RandomSequential = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.AlbumCover)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MusicTimeTrackBar)).BeginInit();
             this.SuspendLayout();
@@ -57,7 +58,7 @@ namespace MusicPlayrt_1._0
             this.ReadFile.Name = "ReadFile";
             this.ReadFile.Size = new System.Drawing.Size(73, 46);
             this.ReadFile.TabIndex = 0;
-            this.ReadFile.Text = "read file";
+            this.ReadFile.Text = "Read file";
             this.ReadFile.UseVisualStyleBackColor = true;
             this.ReadFile.Click += new System.EventHandler(this.ReadFile_Click);
             // 
@@ -79,7 +80,7 @@ namespace MusicPlayrt_1._0
             this.Stop.Name = "Stop";
             this.Stop.Size = new System.Drawing.Size(73, 46);
             this.Stop.TabIndex = 2;
-            this.Stop.Text = "stop";
+            this.Stop.Text = "Stop";
             this.Stop.UseVisualStyleBackColor = true;
             this.Stop.Click += new System.EventHandler(this.Stop_Click);
             // 
@@ -155,15 +156,20 @@ namespace MusicPlayrt_1._0
             this.Library.Name = "Library";
             this.Library.Size = new System.Drawing.Size(258, 346);
             this.Library.TabIndex = 10;
-            this.Library.DoubleClick += new System.EventHandler(this.Library_DoubleClick);
+            this.Library.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.Library_BeforeCollapse);
+            this.Library.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.Library_BeforeExpand);
+            this.Library.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.Library_AfterSelect);
+            this.Library.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.Library_NodeMouseDoubleClick);
+            this.Library.Click += new System.EventHandler(this.Library_Click);
+            this.Library.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Library_MouseDown);
             // 
             // PlayList
             // 
             this.PlayList.FormattingEnabled = true;
             this.PlayList.ItemHeight = 12;
-            this.PlayList.Location = new System.Drawing.Point(594, 36);
+            this.PlayList.Location = new System.Drawing.Point(594, 39);
             this.PlayList.Name = "PlayList";
-            this.PlayList.Size = new System.Drawing.Size(235, 340);
+            this.PlayList.Size = new System.Drawing.Size(237, 340);
             this.PlayList.TabIndex = 11;
             this.PlayList.DoubleClick += new System.EventHandler(this.PlayList_DoubleClick);
             // 
@@ -205,12 +211,23 @@ namespace MusicPlayrt_1._0
             this.Next.UseVisualStyleBackColor = true;
             this.Next.Click += new System.EventHandler(this.Next_Click);
             // 
+            // RandomSequential
+            // 
+            this.RandomSequential.Location = new System.Drawing.Point(466, 384);
+            this.RandomSequential.Name = "RandomSequential";
+            this.RandomSequential.Size = new System.Drawing.Size(73, 46);
+            this.RandomSequential.TabIndex = 16;
+            this.RandomSequential.Text = "Sequential";
+            this.RandomSequential.UseVisualStyleBackColor = true;
+            this.RandomSequential.Click += new System.EventHandler(this.RandomSequential_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GrayText;
-            this.ClientSize = new System.Drawing.Size(851, 450);
+            this.ClientSize = new System.Drawing.Size(863, 450);
+            this.Controls.Add(this.RandomSequential);
             this.Controls.Add(this.Next);
             this.Controls.Add(this.Previous);
             this.Controls.Add(this.label2);
@@ -255,6 +272,7 @@ namespace MusicPlayrt_1._0
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button Previous;
         private System.Windows.Forms.Button Next;
+        private System.Windows.Forms.Button RandomSequential;
     }
 }
 

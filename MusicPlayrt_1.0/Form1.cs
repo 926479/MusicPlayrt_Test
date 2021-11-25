@@ -17,6 +17,9 @@ namespace MusicPlayrt_1._0
         private NAudio.Wave.WaveOutEvent output = null;
 
         private bool TrackBarSlid = false;
+        private bool RandomSong = false;
+
+        public int TreeviewClicks = 0;
 
         string SetPath;
        
@@ -45,7 +48,7 @@ namespace MusicPlayrt_1._0
                     foreach (string m in s1)
                     {
                         string wav_1 = m.Substring(m.LastIndexOf("\\") + 1, m.Length - m.LastIndexOf("\\") - 1);
-                        TreeNode node = new TreeNode(wav_1);
+                        TreeNode node = new TreeNode(wav_1) { Tag = m };
                         wav.Nodes.Add(node);
                     }
                     TreeNode flac = new TreeNode("flac");
@@ -53,7 +56,7 @@ namespace MusicPlayrt_1._0
                     foreach (string m in s2)
                     {
                         string flac_1 = m.Substring(m.LastIndexOf("\\") + 1, m.Length - m.LastIndexOf("\\") - 1);
-                        TreeNode node = new TreeNode(flac_1);
+                        TreeNode node = new TreeNode(flac_1) { Tag = m };
                         flac.Nodes.Add(node);
                     }
                     TreeNode mp3 = new TreeNode("mp3");
@@ -61,7 +64,7 @@ namespace MusicPlayrt_1._0
                     foreach(string m in s3)
                     {
                         string mp3_1 = m.Substring(m.LastIndexOf("\\") + 1, m.Length - m.LastIndexOf("\\") - 1);
-                        TreeNode node = new TreeNode(mp3_1);
+                        TreeNode node = new TreeNode(mp3_1) { Tag = m };
                         mp3.Nodes.Add(node);
                     }
                     
@@ -181,10 +184,63 @@ namespace MusicPlayrt_1._0
             }
         }
 
-        private void Library_DoubleClick(object sender, EventArgs e)
+        private void RandomSequential_Click(object sender, EventArgs e)
+        {
+            if (RandomSequential.Text == "Random")
+            {
+                RandomSequential.Text = "Sequential";
+                RandomSong = false;
+            }
+            else if (RandomSequential.Text == "Sequential")
+            {
+                RandomSequential.Text = "Random";
+                RandomSong = true;
+            }
+
+        }
+
+        private void Library_Click(object sender, EventArgs e)
+        {
+            //MessageBox.Show("2");
+            
+        }
+
+        private void Library_MouseDown(object sender, MouseEventArgs e)
+        {
+            TreeviewClicks = e.Clicks;
+            
+        }
+
+        private void Library_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
+        {
+            e.Cancel = (TreeviewClicks > 1);
+        }
+
+        private void Library_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            e.Cancel = TreeviewClicks > 1;
+            Library.CollapseAll();
+        }
+
+        private void Library_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            TreeNode treeNode = Library.SelectedNode;
+            if (treeNode != null && treeNode.Nodes.Count != 0)
+            {
+                if (TreeviewClicks == 1)
+                {
+                    treeNode.Toggle();
+                }
+                
+            }
+            //label1.Text =Convert.ToString(e.Node.Tag);
+        }
+        
+
+        private void Library_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             PlayList.Items.Clear();
-            TreeNode songs = Library.SelectedNode;
+            TreeNode songs = e.Node;
             if (songs.Nodes.Count == 0)
             {
                 //TreeNode[] songfile = new TreeNode[songs.Parent.Nodes.Count];
@@ -192,32 +248,91 @@ namespace MusicPlayrt_1._0
                 //foreach(TreeNode song in songfile)
                 //{
                 PlayList.Items.Add(songs.Text);
+                
                 //}
                 PlaySong(0);
             }
             else
             {
-                foreach (TreeNode song in songs.Nodes)
+                if (RandomSong == false)
                 {
-                    PlayList.Items.Add(song.Text);
+                    foreach (TreeNode song in songs.Nodes)
+                    {
+                        PlayList.Items.Add(song.Text);
+                    }
+                }
+                else
+                {
+                    TreeNode[] songfile = new TreeNode[songs.Parent.Nodes.Count];
+                    songs.Parent.Nodes.CopyTo(songfile, 0);
+                    foreach(TreeNode song in songfile)
+                    {
+                        PlayList.Items.Add(song.Text);
+                        
+                    }
                 }
                 PlaySong(0);
             }
+            
         }
+
+        
 
         private void PlayList_DoubleClick(object sender, EventArgs e)
         {
             PlaySong(PlayList.SelectedIndex);
+            //label1.Text = PlayList.Items[PlayList.SelectedIndex].ToString();
         }
 
         private void Next_Click(object sender, EventArgs e)
         {
             PlaySong(PlayList.SelectedIndex + 1);
+            PausePlay.Text = "Pause";
         }
 
         private void Previous_Click(object sender, EventArgs e)
         {
             PlaySong(PlayList.SelectedIndex - 1);
+            PausePlay.Text = "Pause";
+        }
+
+        private string Search(TreeNode treeNode, string title)
+        {
+            Queue<TreeNode> Nodes = new Queue<TreeNode>();
+            Nodes.Enqueue(treeNode);
+            while (Nodes.Count > 0)
+            {
+                treeNode = Nodes.Dequeue();
+
+                //System.Diagnostics.Debug.WriteLine(treeNode.Text);
+                if (treeNode.Tag != null)
+                    if (treeNode.Text == title)
+                        return treeNode.Tag.ToString();
+
+                foreach (TreeNode n in treeNode.Nodes)
+                {
+                    Nodes.Enqueue(n);
+                }
+                
+            }
+            return "1";
+        }
+
+        private string GetFullPath(string title)
+        {
+         
+            foreach(TreeNode treeNode in Library.Nodes)
+            {
+                string path = Search(treeNode, title);
+                //System.Diagnostics.Debug.WriteLine(path);
+                if (path != "1")
+                    return path;
+            }
+
+            return "0";
+           
+
+
         }
 
         private void PlaySong(int num)
@@ -230,17 +345,18 @@ namespace MusicPlayrt_1._0
             }
             else if (num < 0)
             {
-                DisposeWave();
+                  DisposeWave();
             }
             else
             {
                 PlayList.SetSelected(num, true);
-                var open = Directory.GetFiles(SetPath, PlayList.SelectedItem.ToString(), SearchOption.AllDirectories);
-                foreach (string OpenFileName in open)
+                string song = PlayList.SelectedItem.ToString();
+                if (GetFullPath(song) != "0")
                 {
+                    string openfile = GetFullPath(song);
                     DisposeWave();
-                    music = new NAudio.Wave.AudioFileReader(OpenFileName);
-                    var Tfile = TagLib.File.Create(System.IO.Path.GetFullPath(OpenFileName));
+                    music = new NAudio.Wave.AudioFileReader(openfile);
+                    var Tfile = TagLib.File.Create(System.IO.Path.GetFullPath(openfile));
                     if (Tfile.Tag.Title != null)
                         Title.Text = Tfile.Tag.Title;
                     else
@@ -276,8 +392,11 @@ namespace MusicPlayrt_1._0
                     Next.Enabled = true;
                     Stop.Enabled = true;
                 }
+                //System.Diagnostics.Debug.WriteLine(song, (GetFullPath(song)));
+
+
             }
-            
+
         }
 
         
